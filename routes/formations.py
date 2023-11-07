@@ -14,7 +14,7 @@ router = APIRouter()
 async def read_formation():
     try:
         cursor = mydb.cursor()
-        query = "SELECT id_formation, nom, promotion FROM formations"
+        query = "SELECT id_formation, nom, promotion FROM formation"
         cursor.execute(query)
         result = cursor.fetchall()
         cursor.close()
@@ -30,7 +30,7 @@ async def create_Formation(file: UploadFile):
     try:
         formations = await excelMethodes.fromExcelToList(file, Formation)
         cursor = mydb.cursor()
-        query = "INSERT INTO formations (nom, promotion) VALUES (%s, %s)"
+        query = "INSERT INTO formation (nom, promotion) VALUES (%s, %s)"
         values = [(formation.nom, formation.promotion)
                   for formation in formations]
         cursor.executemany(query, values)
