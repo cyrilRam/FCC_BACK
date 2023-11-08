@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
-from config.db import mydb
-from models.formations import Formation
+import models.formations.formationsDAO as DAO
+from models.formations.formations import Formation
 from typing import List
-import pandas as pd
-import io
 from utils import excelMethodes
+
 
 router = APIRouter()
 
@@ -13,12 +12,7 @@ router = APIRouter()
 @router.get("/formations/")
 async def read_formation():
     try:
-        cursor = mydb.cursor()
-        query = "SELECT id_formation, nom, promotion FROM formation"
-        cursor.execute(query)
-        result = cursor.fetchall()
-        cursor.close()
-        return {"formations": result}
+       return DAO.getFormations()
     except Exception as e:
         print(f"Une exception s'est produite dans read_formation : {e}")
         raise HTTPException(
@@ -29,18 +23,8 @@ async def read_formation():
 async def create_Formation(file: UploadFile):
     try:
         formations = await excelMethodes.fromExcelToList(file, Formation)
-        cursor = mydb.cursor()
-        query = "INSERT INTO formation (nom, promotion) VALUES (%s, %s)"
-        values = [(formation.nom, formation.promotion)
-                  for formation in formations]
-        cursor.executemany(query, values)
-        mydb.commit()
-        cursor.close()
+        DAO.addFormations(formations)
         return JSONResponse("Ajout données réalisé")
-    except HTTPException as e:
-        # Gérer l'exception ici (par exemple, enregistrer un journal)
-        print(f"Une exception s'est produite dans create_Formation : {e}")
-        raise e
     except Exception as e:
         # Gérer l'exception ici (par exemple, enregistrer un journal)
         raise HTTPException(

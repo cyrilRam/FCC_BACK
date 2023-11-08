@@ -4,7 +4,10 @@ from pydantic import BaseModel
 from fastapi import FastAPI
 from routes import formations
 
-
+# #
+# TODO:-afficher liste des formation et possibiliter modifier noms et promo
+# TODO:-ajouter nouvelle ligne formation et ajouter a la base
+# TODO:-telecharger toutes les formations dans un excel
 
 app = FastAPI()
 

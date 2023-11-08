@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from models.formations import Formation
+from models.formations.formations import Formation
 from typing import TypeVar, List, Type
 import pandas as pd
 import io
