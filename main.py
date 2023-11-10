@@ -2,7 +2,7 @@ from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi import FastAPI
-from routes import formations
+from APIs import formations
 
 # #
 # TODO:-afficher liste des formation et possibiliter modifier noms et promo
