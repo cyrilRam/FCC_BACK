@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 import models.formations.formationsDAO as DAO
 from models.formations.formations import Formation
@@ -12,7 +12,9 @@ router = APIRouter()
 @router.get("/formations/")
 async def read_formation():
     try:
-       return DAO.getFormations()
+       formationsDf=DAO.getFormations()
+       json_data=formationsDf.to_json(orient="records")
+       return JSONResponse(content=json_data)
     except Exception as e:
         print(f"Une exception s'est produite dans read_formation : {e}")
         raise HTTPException(

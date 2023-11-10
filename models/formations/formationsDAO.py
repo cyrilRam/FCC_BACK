@@ -1,5 +1,6 @@
 
 from config.db import mydb
+import pandas as pd
 def addFormations(formations):
     cursor = mydb.cursor()
     query = "INSERT INTO formation (nom, promotion) VALUES (%s, %s)"
@@ -14,4 +15,9 @@ def getFormations():
     cursor.execute(query)
     result = cursor.fetchall()
     cursor.close()
-    return result
+
+    # Convertir les résultats en DataFrame de pandas
+    columns = ["id", "nom", "promotion"]
+    formations_df = pd.DataFrame(result, columns=columns)
+
+    return formations_df
