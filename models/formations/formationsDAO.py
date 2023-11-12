@@ -21,3 +21,4 @@ def getFormations():
     formations_df = pd.DataFrame(result, columns=columns)
 
     return formations_df
+

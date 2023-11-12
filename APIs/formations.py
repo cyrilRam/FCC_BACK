@@ -31,3 +31,25 @@ async def create_Formation(file: UploadFile):
         # Gérer l'exception ici (par exemple, enregistrer un journal)
         raise HTTPException(
             status_code=500, detail=f"Erreur BDD : {e}")
+
+
+@router.post("/formations/updateTable/",response_model=List[Formation])
+async def update_Formation(newData:List[Formation]):
+    """
+    on va devoir gerer le cas on ou on a un id de fee et onn peut modifier ajouter de new fees
+    il vaut mieux des tables avec un id a chaque fois et une unicite de la valeur ou alors c'st miux de mttr juste les noms
+    et d'avoir ca en cle primaire.
+    Sinon la table formation on met juste couple nom et promotion en cle primaire
+    le pb avec ca si je modifie le nom et que j'ai une table qui utilise ce nom alors ma table est fausse alors que avec
+    l'id je dois juste mettre a jour la valeur
+    :param newData:
+    :return:
+    """
+    
+    try:
+        print(newData)
+        return JSONResponse("Mise a jour des données")
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Erreur BDD : {e}")
+
