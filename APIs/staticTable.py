@@ -1,32 +1,42 @@
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
-import models.formations.formationsDAO as DAO
+import models.formations.formationsDAO as formationsDAO
 from models.formations.formations import Formation
+from models.students.Student import Student
+import models.students.StudentsDAO as studentDAO
 from typing import List
 from utils import excelMethodes
-from typing import TypeVar, List, Type
-
+from typing import TypeVar, List, Type,Union
 
 router = APIRouter()
 
 
-@router.get("/formations/")
-async def read_formation():
+@router.get("/getStaticTable/{obj_Type:str}")
+async def read_table(obj_Type:str):
     try:
-       formationsDf=DAO.getFormations()
-       json_data=formationsDf.to_json(orient="records")
-       return JSONResponse(content=json_data)
+        if obj_Type == "formation":
+           dataDf=formationsDAO.getFormations()
+        elif obj_Type == "student":
+           dataDf = studentDAO.getStudents()
+
+        json_data=dataDf.to_json(orient="records")
+        return JSONResponse(content=json_data)
     except Exception as e:
         print(f"Une exception s'est produite dans read_formation : {e}")
         raise HTTPException(
             status_code=500, detail="Erreur interne du serveur")
 
 
-@router.post("/formations/", response_model=List[Formation])
-async def create_Formation(file: UploadFile):
+@router.post("/addDataStaticTable/{obj_Type:str}")
+async def create_Formation(file: UploadFile,obj_Type:str):
     try:
-        formations = await excelMethodes.fromExcelToList(file, Formation)
-        DAO.addFormations(formations)
+        if obj_Type == "formation":
+            formations = await excelMethodes.fromExcelToList(file, Formation)
+            formationsDAO.addFormations(formations)
+        elif obj_Type == "student":
+            students = await excelMethodes.fromExcelToList(file, Student)
+            studentDAO.addStudent(students)
+
         return JSONResponse("Ajout données réalisé")
     except Exception as e:
         # Gérer l'exception ici (par exemple, enregistrer un journal)
@@ -34,8 +44,8 @@ async def create_Formation(file: UploadFile):
             status_code=500, detail=f"Erreur BDD : {e}")
 
 
-@router.post("/formations/updateTable/",response_model=List[Formation])
-async def update_Formation(newData:List[Formation]):
+@router.post("/updateTable/{obj_Type:str}")
+async def update_Formation(obj_Type:str,newData:Union[List[Formation],List[Student]]):
     """
     on va devoir gerer le cas on ou on a un id de fee et onn peut modifier ajouter de new fees
     il vaut mieux des tables avec un id a chaque fois et une unicite de la valeur ou alors c'st miux de mttr juste les noms
@@ -52,7 +62,8 @@ async def update_Formation(newData:List[Formation]):
     try:
 
         print(newData)
-        print(type(newData[0]))
+        if obj_Type == "formation":
+            print(type(newData[0]))
 
         return JSONResponse("Mise a jour des données")
     except Exception as e:

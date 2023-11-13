@@ -2,8 +2,7 @@ from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi import FastAPI
-from APIs import formations
-from APIs import student
+from APIs import staticTable
 
 # #
 # TODO:-afficher liste des formation et possibiliter modifier noms et promo
@@ -12,8 +11,7 @@ from APIs import student
 
 app = FastAPI()
 
-app.include_router(formations.router, prefix="/api", tags=["formations"])
-app.include_router(student.router, prefix="/api", tags=["students"])
+app.include_router(staticTable.router, prefix="/api", tags=["staticTable"])
 
 origin = ["http://localhost:3000"]
 

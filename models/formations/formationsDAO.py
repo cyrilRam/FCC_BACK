@@ -17,7 +17,7 @@ def getFormations():
     cursor.close()
 
     # Convertir les résultats en DataFrame de pandas
-    columns = ["nom", "promotion"]
+    columns = ["id","nom", "promotion"]
     formations_df = pd.DataFrame(result, columns=columns)
 
     return formations_df
