@@ -1,13 +1,16 @@
-from config.db import mydb
 import pandas as pd
+
+from config.db import mydb
+
 
 def addStudent(students):
     cursor = mydb.cursor()
     query = "INSERT INTO student (nom, prenom,age) VALUES (%s, %s,%s)"
-    values = [(student.nom, student.prenom,student.age) for student in students]
+    values = [(student.nom, student.prenom, student.age) for student in students]
     cursor.executemany(query, values)
     mydb.commit()
     cursor.close()
+
 
 def getStudents():
     cursor = mydb.cursor()
@@ -17,7 +20,7 @@ def getStudents():
     cursor.close()
 
     # Convertir les résultats en DataFrame de pandas
-    columns = ["id", "nom", "prenom","age"]
+    columns = ["id", "nom", "prenom", "age"]
     student_df = pd.DataFrame(result, columns=columns)
 
-    return student_df
+    return student_df, result

@@ -1,14 +1,17 @@
+import io
+from typing import Type
+
+import pandas as pd
 from fastapi import HTTPException
+
 from models.formations.formations import Formation
 from models.students.Student import Student
-from typing import TypeVar, List, Type
-import pandas as pd
-import io
 
-dicoColumn={
-    Formation:['nom', 'promotion'],
-    Student:['nom','prenom','age']
+dicoColumn = {
+    Formation: ['nom', 'promotion'],
+    Student: ['nom', 'prenom', 'age']
 }
+
 
 async def fromExcelToList(file, object_type: Type):
     # Lire le contenu du fichier comme des bytes
@@ -28,13 +31,14 @@ async def fromExcelToList(file, object_type: Type):
     for _, row in df.iterrows():
         if object_type in dicoColumn:
             columns = dicoColumn[object_type]
+
             obj_data = {col: row[col] for col in columns}
+            obj_data['id'] = None
             # Exclure le champ 'id' si présent
-            obj_data.pop('id', None)
+
             obj = object_type(**obj_data)
         else:
             raise ValueError("Type d'objet non reconnu")
         objects.append(obj)
 
     return objects
-
