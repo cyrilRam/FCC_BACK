@@ -1,7 +1,7 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class Formation(BaseModel):
-    id: int
     nom: str
     promotion: str

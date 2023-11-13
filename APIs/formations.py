@@ -4,6 +4,7 @@ import models.formations.formationsDAO as DAO
 from models.formations.formations import Formation
 from typing import List
 from utils import excelMethodes
+from typing import TypeVar, List, Type
 
 
 router = APIRouter()
@@ -45,9 +46,14 @@ async def update_Formation(newData:List[Formation]):
     :param newData:
     :return:
     """
-    
+    # check chaque id si nom/promotion a changé on met à jour
+    # si new id alors on ajoute dans la table
+    # si lid n'est plus la on supprimme'
     try:
+
         print(newData)
+        print(type(newData[0]))
+
         return JSONResponse("Mise a jour des données")
     except Exception as e:
         raise HTTPException(

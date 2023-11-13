@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi import FastAPI
 from APIs import formations
+from APIs import student
 
 # #
 # TODO:-afficher liste des formation et possibiliter modifier noms et promo
@@ -11,7 +12,8 @@ from APIs import formations
 
 app = FastAPI()
 
-app.include_router(formations.router, prefix="/api", tags=["formaions"])
+app.include_router(formations.router, prefix="/api", tags=["formations"])
+app.include_router(student.router, prefix="/api", tags=["students"])
 
 origin = ["http://localhost:3000"]
 
