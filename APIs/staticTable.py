@@ -25,23 +25,6 @@ async def read_table(obj_Type: str):
             status_code=500, detail="Erreur interne du serveur")
 
 
-# @router.post("/addDataStaticTable/{obj_Type:str}")
-# async def create_Formation(file: UploadFile, obj_Type: str):
-#     try:
-#         if obj_Type == "formation":
-#             formations = await excelMethodes.fromExcelToList(file, Formation)
-#             Formation.add(formations)
-#         elif obj_Type == "student":
-#             students = await excelMethodes.fromExcelToList(file, Student)
-#             Student.add(students)
-#
-#         return JSONResponse("Ajout données réalisé")
-#     except Exception as e:
-#         # Gérer l'exception ici (par exemple, enregistrer un journal)
-#         raise HTTPException(
-#             status_code=500, detail=f"Erreur BDD : {e}")
-
-
 @router.post("/updateTable/")
 async def update_Formation(newData: Union[List[Formation], List[Student]]):
     try:
