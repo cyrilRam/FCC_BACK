@@ -19,20 +19,20 @@ def updateTable(newData):
             if not isIn:
                 objects_to_delete.append(old_obj)
 
+        objects_to_add = [obj for obj in newData if obj.id is None]
+
         objects_to_updtade = []
-        objects_to_add = []
+
         for new_obj in newData:
-            find = False
             for old_ob in old_objects:
                 if new_obj.id == old_ob.id:
-                    find = True
                     if new_obj.nom != old_ob.nom or new_obj.promotion != old_ob.promotion:
                         objects_to_updtade.append(new_obj)
-            if not find:
-                objects_to_add.append(new_obj)
 
-        formationDAO.deleteFormations(objects_to_delete)
-        formationDAO.addFormations(objects_to_add)
-        formationDAO.uploadFormations(objects_to_updtade)
+
+
+        formationDAO.deleteFormations(objects_to_delete) if objects_to_delete else None
+        formationDAO.addFormations(objects_to_add) if objects_to_add else None
+        formationDAO.uploadFormations(objects_to_updtade) if objects_to_updtade else None
 
     return

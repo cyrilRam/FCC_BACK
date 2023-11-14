@@ -25,8 +25,9 @@ def uploadFormations(new_formations):
 def deleteFormations(delete_formations):
     cursor = mydb.cursor()
     update_query = ("DELETE FROM formation WHERE id_formation = %s")
-    update_values = [formation.id for formation in delete_formations]
-    cursor.executemany(update_query, update_values)
+    delete_values = [(formation.id,) for formation in delete_formations]
+    #update_values = [formation.id for formation in delete_formations]
+    cursor.executemany(update_query, delete_values)
     mydb.commit()
     cursor.close()
 
