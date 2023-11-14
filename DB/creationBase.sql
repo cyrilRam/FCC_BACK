@@ -16,3 +16,11 @@ CREATE TABLE student (
 
 ALTER TABLE student
 ADD CONSTRAINT uc_nom_prenom_age UNIQUE (nom, prenom, age);
+
+CREATE TABLE resultats (
+    periodstr VARCHAR(255),
+    nom VARCHAR(255) NOT NULL ,
+    prenom VARCHAR(255) NOT NULL ,
+    note int NOT NULL ,
+    PRIMARY KEY (periodstr,nom,prenom,note)
+);

@@ -1,7 +1,7 @@
-from typing import List
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from APIs import imports
 from APIs import staticTable
 
 # #
@@ -12,6 +12,7 @@ from APIs import staticTable
 app = FastAPI()
 
 app.include_router(staticTable.router, prefix="/api", tags=["staticTable"])
+app.include_router(imports.router, prefix="/api", tags=["Imports"])
 
 origin = ["http://localhost:3000"]
 
@@ -22,7 +23,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="localhost", port=8000)

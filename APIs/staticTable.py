@@ -1,12 +1,11 @@
 from typing import List, Union
 
-from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
 from models.static_tables.Formation import Formation
 from models.static_tables.Student import Student
 from utils import UpdateAStaticTable
-from utils import excelMethodes
 
 router = APIRouter()
 
@@ -26,21 +25,21 @@ async def read_table(obj_Type: str):
             status_code=500, detail="Erreur interne du serveur")
 
 
-@router.post("/addDataStaticTable/{obj_Type:str}")
-async def create_Formation(file: UploadFile, obj_Type: str):
-    try:
-        if obj_Type == "formation":
-            formations = await excelMethodes.fromExcelToList(file, Formation)
-            Formation.add(formations)
-        elif obj_Type == "student":
-            students = await excelMethodes.fromExcelToList(file, Student)
-            Student.add(students)
-
-        return JSONResponse("Ajout données réalisé")
-    except Exception as e:
-        # Gérer l'exception ici (par exemple, enregistrer un journal)
-        raise HTTPException(
-            status_code=500, detail=f"Erreur BDD : {e}")
+# @router.post("/addDataStaticTable/{obj_Type:str}")
+# async def create_Formation(file: UploadFile, obj_Type: str):
+#     try:
+#         if obj_Type == "formation":
+#             formations = await excelMethodes.fromExcelToList(file, Formation)
+#             Formation.add(formations)
+#         elif obj_Type == "student":
+#             students = await excelMethodes.fromExcelToList(file, Student)
+#             Student.add(students)
+#
+#         return JSONResponse("Ajout données réalisé")
+#     except Exception as e:
+#         # Gérer l'exception ici (par exemple, enregistrer un journal)
+#         raise HTTPException(
+#             status_code=500, detail=f"Erreur BDD : {e}")
 
 
 @router.post("/updateTable/")

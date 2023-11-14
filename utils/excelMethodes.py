@@ -2,14 +2,15 @@ import io
 from typing import Type
 
 import pandas as pd
-from fastapi import HTTPException
 
+from models.imports.Results import Result
 from models.static_tables.Formation import Formation
 from models.static_tables.Student import Student
 
 dicoColumn = {
     Formation: ['nom', 'promotion'],
-    Student: ['nom', 'prenom', 'age']
+    Student: ['nom', 'prenom', 'age'],
+    Result: ['periodstr', 'nom', 'prenom', 'note']
 }
 
 
@@ -24,21 +25,20 @@ async def fromExcelToList(file, object_type: Type):
     # Vérifier que les noms de colonnes correspondent à l'objet type
     expected_columns = dicoColumn.get(object_type)
     if not df.columns.tolist() == expected_columns:
-        raise HTTPException(
-            status_code=400, detail="Le nom des colonnes du fichier Excel ne correspond pas à ce qui est attendu")
+        raise NotGoodNameColumns("Les nom des colonnes ne correspond pas a ce qui est attendu")
 
     objects = []
     for _, row in df.iterrows():
         if object_type in dicoColumn:
             columns = dicoColumn[object_type]
-
             obj_data = {col: row[col] for col in columns}
-            obj_data['id'] = None
-            # Exclure le champ 'id' si présent
-
             obj = object_type(**obj_data)
         else:
             raise ValueError("Type d'objet non reconnu")
         objects.append(obj)
 
-    return objects
+    return df, objects
+
+
+class NotGoodNameColumns(Exception):
+    pass
