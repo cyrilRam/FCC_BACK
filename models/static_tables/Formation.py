@@ -45,3 +45,13 @@ class Formation(BaseModel):
         query = "UPDATE formation SET nom = %s, promotion = %s WHERE id_formation = %s"
         values = [(formation.nom, formation.promotion, formation.id) for formation in listStatic]
         staticDAO.cudMethod(query, values)
+
+    def __eq__(self, other):
+        """
+        Override the equality operator to compare based on nom and promotion fields.
+        """
+        return (
+                isinstance(other, Formation)
+                and self.nom == other.nom
+                and self.promotion == other.promotion
+        )

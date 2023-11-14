@@ -45,26 +45,8 @@ async def create_Formation(file: UploadFile, obj_Type: str):
 
 @router.post("/updateTable/")
 async def update_Formation(newData: Union[List[Formation], List[Student]]):
-    """
-    on va devoir gerer le cas on ou on a un id de fee et onn peut modifier ajouter de new fees
-    il vaut mieux des tables avec un id a chaque fois et une unicite de la valeur ou alors c'st miux de mttr juste les noms
-    et d'avoir ca en cle primaire.
-    Sinon la table formation on met juste couple nom et promotion en cle primaire
-    le pb avec ca si je modifie le nom et que j'ai une table qui utilise ce nom alors ma table est fausse alors que avec
-    l'id je dois juste mettre a jour la valeur
-    :param newData:
-    :return:
-    """
-    # check chaque id si nom/promotion a changé on met à jour
-    # si new id alors on ajoute dans la table
-    # si lid n'est plus la on supprimme'
     try:
-
-        print(newData)
-        print(type(newData[0]))
-        if type(newData[0]) == Formation:
-            UpdateAStaticTable.updateTable(newData)
-
+        UpdateAStaticTable.updateTable(newData)
         return JSONResponse("Mise a jour des données")
     except Exception as e:
         raise HTTPException(

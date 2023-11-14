@@ -38,5 +38,16 @@ class Student(BaseModel):
     @staticmethod
     def update(listStatic):
         query = "UPDATE student SET nom = %s, prenom = %s,age=%s WHERE id_student = %s"
-        values = [(student.nom, student.promotion, student.id) for student in listStatic]
+        values = [(student.nom, student.prenom, student.age, student.id) for student in listStatic]
         staticDAO.cudMethod(query, values)
+
+    def __eq__(self, other):
+        """
+        Override the equality operator to compare based on nom,age et prenom fields.
+        """
+        return (
+                isinstance(other, Student)
+                and self.nom == other.nom
+                and self.prenom == other.prenom
+                and self.age == other.age
+        )
