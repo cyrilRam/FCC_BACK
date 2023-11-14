@@ -4,8 +4,8 @@ from typing import Type
 import pandas as pd
 from fastapi import HTTPException
 
-from models.formations.formations import Formation
-from models.students.Student import Student
+from models.static_tables.Formation import Formation
+from models.static_tables.Student import Student
 
 dicoColumn = {
     Formation: ['nom', 'promotion'],

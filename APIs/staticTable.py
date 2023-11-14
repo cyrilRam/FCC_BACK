@@ -3,10 +3,8 @@ from typing import List, Union
 from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
-import models.formations.formationsDAO as formationsDAO
-import models.students.StudentsDAO as studentDAO
-from models.formations.formations import Formation
-from models.students.Student import Student
+from models.static_tables.Formation import Formation
+from models.static_tables.Student import Student
 from utils import UpdateAStaticTable
 from utils import excelMethodes
 
@@ -17,13 +15,9 @@ router = APIRouter()
 async def read_table(obj_Type: str):
     try:
         if obj_Type == "formation":
-            dataDf, listObject = formationsDAO.getFormations()
-            print(listObject)
-            print(type(listObject[0]))
-
+            dataDf, listObject = Formation.get()
         elif obj_Type == "student":
-            dataDf, listObject = studentDAO.getStudents()
-
+            dataDf, listObject = Student.get()
         json_data = dataDf.to_json(orient="records")
         return JSONResponse(content=json_data)
     except Exception as e:
@@ -37,10 +31,10 @@ async def create_Formation(file: UploadFile, obj_Type: str):
     try:
         if obj_Type == "formation":
             formations = await excelMethodes.fromExcelToList(file, Formation)
-            formationsDAO.addFormations(formations)
+            Formation.add(formations)
         elif obj_Type == "student":
             students = await excelMethodes.fromExcelToList(file, Student)
-            studentDAO.addStudent(students)
+            Student.add(students)
 
         return JSONResponse("Ajout données réalisé")
     except Exception as e:

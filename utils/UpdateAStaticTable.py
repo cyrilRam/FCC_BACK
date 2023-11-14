@@ -1,5 +1,4 @@
-import models.formations.formationsDAO as formationDAO
-from models.formations.formations import Formation
+from models.static_tables.Formation import Formation
 
 
 def updateTable(newData):
@@ -9,7 +8,7 @@ def updateTable(newData):
     :return:
     """
     if type(newData[0]) == Formation:
-        df, old_objects = formationDAO.getFormations()
+        df, old_objects = Formation.get()
         objects_to_delete = []
         for old_obj in old_objects:
             isIn = False
@@ -29,10 +28,8 @@ def updateTable(newData):
                     if new_obj.nom != old_ob.nom or new_obj.promotion != old_ob.promotion:
                         objects_to_updtade.append(new_obj)
 
-
-
-        formationDAO.deleteFormations(objects_to_delete) if objects_to_delete else None
-        formationDAO.addFormations(objects_to_add) if objects_to_add else None
-        formationDAO.uploadFormations(objects_to_updtade) if objects_to_updtade else None
+        Formation.delete(objects_to_delete) if objects_to_delete else None
+        Formation.add(objects_to_add) if objects_to_add else None
+        Formation.update(objects_to_updtade) if objects_to_updtade else None
 
     return
