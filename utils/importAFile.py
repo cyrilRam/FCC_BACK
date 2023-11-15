@@ -1,4 +1,5 @@
 from models.imports.Results import Result
+from models.static_tables.Student import Student
 
 
 def importDataFromImportFile(newData):
@@ -9,17 +10,29 @@ def importDataFromImportFile(newData):
     :param newData:
     :return:
     """
-    df, actualData = Result.get()
-    if checkIfDataForThisPeriodExisting(newData, actualData):
-        deleteData = [result for result in actualData if result.periodstr == newData[0].periodstr]
-        Result.delete(deleteData)
-        Result.add(newData)
+    possible, listNomsInconnus = checkIfStudentNotinDataBase(newData)
+    period = newData[0].periodstr
+    if possible:
+        if Result.isDataExisting(period):
+            Result.delete(period)
+            Result.add(newData)
+        else:
+            Result.add(newData)
     else:
-        Result.add(newData)
-
-    objToDelete = []
+        raise Exception("Les (noms,prenoms) suivants ne sont pas dans la data base" + str(listNomsInconnus))
 
 
-def checkIfDataForThisPeriodExisting(newData, actualData):
-    existing_periods = [result.periodstr for result in actualData]
-    return newData[0].periodstr in existing_periods
+def checkIfStudentNotinDataBase(newData):
+    """
+
+    :param newData:
+    :return: True si c'est vide la diff
+    """
+    dfStudent, listStudents = Student.get()
+    listName = [(student.nom, student.prenom) for student in listStudents]
+    nomPrenomInResult = [(d.nom.lower(), d.prenom.lower()) for d in newData]
+    result = set(nomPrenomInResult) - set(listName)
+    if not result:
+        return True, set()
+    else:
+        return False, result

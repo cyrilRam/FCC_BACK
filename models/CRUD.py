@@ -8,9 +8,13 @@ def cudMethod(query, values):
     cursor.close()
 
 
-def getDataStaticTable(query):
+def getDataStaticTable(query, params=None):
     cursor = mydb.cursor()
-    cursor.execute(query)
+    if params:
+        cursor.execute(query, params)
+    else:
+        cursor.execute(query)
+
     result = cursor.fetchall()
     cursor.close()
     return result

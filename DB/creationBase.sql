@@ -24,3 +24,20 @@ CREATE TABLE resultats (
     note int NOT NULL ,
     PRIMARY KEY (periodstr,nom,prenom,note)
 );
+
+CREATE TABLE resultats (
+    periodstr VARCHAR(255),
+    nom VARCHAR(255) NOT NULL ,
+    prenom VARCHAR(255) NOT NULL ,
+    note int NOT NULL ,
+    PRIMARY KEY (periodstr,nom,prenom,note)
+);
+
+CREATE  TABLE moyennes(
+    id_student INT,
+    periodstr VARCHAR(255),
+    moyenne FLOAT,
+    date_calcul DATE,
+    FOREIGN KEY (id_student) REFERENCES student(id_student),
+    PRIMARY KEY (id_student,periodstr)
+)

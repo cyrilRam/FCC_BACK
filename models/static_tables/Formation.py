@@ -3,7 +3,7 @@ from typing import Optional
 import pandas as pd
 from pydantic import BaseModel
 
-import models.static_tables.staticDAO as staticDAO
+import models.CRUD as CRUD
 
 
 class Formation(BaseModel):
@@ -20,13 +20,13 @@ class Formation(BaseModel):
     @staticmethod
     def add(listStatic):
         query = "INSERT INTO formation (nom, promotion) VALUES (%s, %s)"
-        values = [(formation.nom, formation.promotion) for formation in listStatic]
-        staticDAO.cudMethod(query, values)
+        values = [(formation.nom.lower(), formation.promotion.lower()) for formation in listStatic]
+        CRUD.cudMethod(query, values)
 
     @staticmethod
     def get():
         query = "SELECT id_formation, nom, promotion FROM formation"
-        result = staticDAO.getDataStaticTable(query)
+        result = CRUD.getDataStaticTable(query)
         # convertir liste de forma
         staticList = [Formation(id=row[0], nom=row[1], promotion=row[2]) for row in result]
         # Convertir les résultats en DataFrame de pandas
@@ -38,13 +38,13 @@ class Formation(BaseModel):
     def delete(listStatic):
         query = ("DELETE FROM formation WHERE id_formation = %s")
         values = [(formation.id,) for formation in listStatic]
-        staticDAO.cudMethod(query, values)
+        CRUD.cudMethod(query, values)
 
     @staticmethod
     def update(listStatic):
         query = "UPDATE formation SET nom = %s, promotion = %s WHERE id_formation = %s"
-        values = [(formation.nom, formation.promotion, formation.id) for formation in listStatic]
-        staticDAO.cudMethod(query, values)
+        values = [(formation.nom.lower(), formation.promotion.lower(), formation.id) for formation in listStatic]
+        CRUD.cudMethod(query, values)
 
     def __eq__(self, other):
         """

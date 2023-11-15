@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from APIs import imports
+from APIs import imports, calcul
 from APIs import staticTable
 
 # TODO : ajouter le calcul qui va pour une period donné ajouter une ligne par eleve et par moyenne avec possibilité de télécharger execl avec les données de la periode
@@ -10,6 +10,7 @@ app = FastAPI()
 
 app.include_router(staticTable.router, prefix="/api", tags=["staticTable"])
 app.include_router(imports.router, prefix="/api", tags=["Imports"])
+app.include_router(calcul.router, prefix="/api", tags=["Calcul"])
 
 origin = ["http://localhost:3000"]
 

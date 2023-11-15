@@ -8,10 +8,10 @@ from utils import importAFile
 router = APIRouter()
 
 
-@router.get("/getDataImports/")
-async def getImports():
+@router.get("/getDataImports/{period:str}")
+async def getImports(period: str):
     try:
-        df, imports = Result.get()
+        df, imports = Result.get(period)
         json_data = df.to_json(orient="records")
         return JSONResponse(content=json_data)
 
@@ -22,7 +22,7 @@ async def getImports():
 
 
 @router.post("/ImportsDataFromFile/{obj_Type:str}")
-async def create_Formation(file: UploadFile, obj_Type: str):
+async def uploadResults(file: UploadFile, obj_Type: str):
     try:
         if obj_Type == "results":
             df, imports = await excelMethodes.fromExcelToList(file, Result)
