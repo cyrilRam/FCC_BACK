@@ -4,10 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from APIs import imports
 from APIs import staticTable
 
-# #
-# TODO:-afficher liste des formation et possibiliter modifier noms et promo
-# TODO:-ajouter nouvelle ligne formation et ajouter a la base
-# TODO:-telecharger toutes les formations dans un excel
+# TODO : ajouter le calcul qui va pour une period donné ajouter une ligne par eleve et par moyenne avec possibilité de télécharger execl avec les données de la periode
 
 app = FastAPI()
 
