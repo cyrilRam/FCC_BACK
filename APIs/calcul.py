@@ -1,8 +1,10 @@
+import io
+
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from models.imports.Results import Result
-from utils.calculMethod import calculMoyenne
+from utils.calculMethod import calculMoyenne, getDataForExcelMoyenne
 
 router = APIRouter()
 
@@ -24,3 +26,19 @@ async def getPeriod():
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Erreur recup period : {e}")
+
+
+@router.get("/uploadExcelMoyennes/{period:str}")
+async def uploadMoyennes(period: str):
+    try:
+        df = getDataForExcelMoyenne(period)
+        excel_content = io.BytesIO()
+        df.to_excel(excel_content, index=False)
+        excel_content.seek(0)
+        return StreamingResponse(content=excel_content,
+                                 media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                 headers={"Content-Disposition": "attachment;filename=resultats.xlsx"})
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Erreur extraction excel : {e}")

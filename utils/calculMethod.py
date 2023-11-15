@@ -42,3 +42,13 @@ def wichStudentFromName(listStudent, name):
             return student
 
     return None
+
+
+def getDataForExcelMoyenne(period):
+    if not Moyenne.isDataExisting(period):
+        raise Exception("Aucun Calcul n'a été réalisé pour cette période")
+    dfMoyennes = Moyenne.getData(period)
+    dfStudents, lst = Student.get()
+    df = dfMoyennes.merge(dfStudents, left_on='id_student', right_on='id', how='inner')
+    df = df[['nom', 'prenom', 'age', 'periodstr', 'moyenne']]
+    return df

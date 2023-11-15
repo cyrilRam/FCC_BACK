@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import pandas as pd
 from pydantic import BaseModel
 
 import models.CRUD as CRUD
@@ -30,3 +31,12 @@ class Moyenne(BaseModel):
         query = ("DELETE FROM moyennes WHERE periodstr = %s")
         values = [(period,)]
         CRUD.cudMethod(query, values)
+
+    @staticmethod
+    def getData(period):
+        query = "SELECT * FROM moyennes WHERE periodstr = %s"
+        values = (period,)
+        result = CRUD.getDataStaticTable(query, values)
+        columns = ["id_student", "periodstr", "moyenne", "date"]
+        staticDf = pd.DataFrame(result, columns=columns)
+        return staticDf
