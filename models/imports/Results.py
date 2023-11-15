@@ -38,8 +38,15 @@ class Result(BaseModel):
         values = [(period,)]
         CRUD.cudMethod(query, values)
 
+    @staticmethod
     def isDataExisting(period):
         query = "SELECT * FROM resultats WHERE periodstr=%s"
         params = (period,)
         result = CRUD.getDataStaticTable(query, params)
         return True if result else False
+
+    @staticmethod
+    def getDate():
+        query = "SELECT DISTINCT periodstr FROM resultats"
+        result = CRUD.getDataStaticTable(query)
+        return list(result)
