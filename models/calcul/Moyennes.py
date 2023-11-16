@@ -20,11 +20,22 @@ class Moyenne(BaseModel):
                   listImports]
         CRUD.cudMethod(query, values)
 
+    @staticmethod
     def isDataExisting(period):
         query = "SELECT * FROM moyennes WHERE periodstr=%s"
         params = (period,)
         result = CRUD.getDataStaticTable(query, params)
         return True if result else False
+
+    @staticmethod
+    def lastDateCalculPeriod(period):
+        query = "SELECT DISTINCT date_calcul FROM moyennes WHERE periodstr=%s"
+        params = (period,)
+        result = CRUD.getDataStaticTable(query, params)
+        if result:
+            return result[0]
+        else:
+            return None
 
     @staticmethod
     def delete(period):

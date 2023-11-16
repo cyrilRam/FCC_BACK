@@ -3,6 +3,7 @@ import io
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 
+from models.calcul.Moyennes import Moyenne
 from models.imports.Results import Result
 from utils.calculMethod import calculMoyenne, getDataForExcelMoyenne
 
@@ -22,7 +23,17 @@ async def madeCalcul(period: str):
 @router.get("/getPeriodWithData")
 async def getPeriod():
     try:
-        return Result.getDate()
+        lst = Result.getDate()
+        return lst
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Erreur recup period : {e}")
+
+
+@router.get("/lastCalculForPeriod/{period:str}")
+async def getDateUpdate(period: str):
+    try:
+        return Moyenne.lastDateCalculPeriod(period)
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Erreur recup period : {e}")

@@ -49,4 +49,6 @@ class Result(BaseModel):
     def getDate():
         query = "SELECT DISTINCT periodstr FROM resultats"
         result = CRUD.getDataStaticTable(query)
-        return list(result)
+        # lst = [[row[0], Moyenne.lastDateCalculPeriod(row[0])[0]] for row in result]
+        lst = [row[0] for row in result]
+        return lst
