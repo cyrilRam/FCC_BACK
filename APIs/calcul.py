@@ -5,7 +5,9 @@ from fastapi.responses import JSONResponse, StreamingResponse
 
 from models.calcul.Moyennes import Moyenne
 from models.imports.Results import Result
-from utils.calculMethod import calculMoyenne, getDataForExcelMoyenne
+from models.static_tables.Student import Student
+from utils.calcul.calculMethod import calculMoyenne, getDataForExcelMoyenne
+from utils.calcul.pdf import merge_pdfs
 
 router = APIRouter()
 
@@ -53,3 +55,11 @@ async def uploadMoyennes(period: str):
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Erreur extraction excel : {e}")
+
+
+@router.get("/uploadPDFMoyennes/{period:str}")
+async def uploadMoyennes(period: str):
+    df_results, reults = Result.get(period)
+    df_students, students = Student.get()
+    merged_pdf_path = merge_pdfs(students, df_results, df_students)
+    return StreamingResponse(open(merged_pdf_path, 'rb'), media_type="application/pdf")

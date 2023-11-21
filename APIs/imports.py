@@ -2,8 +2,7 @@ from fastapi import APIRouter, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
 from models.imports.Results import Result
-from utils import excelMethodes
-from utils import importAFile
+from utils.imports import excelMethodes, importAFile
 
 router = APIRouter()
 
