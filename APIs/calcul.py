@@ -61,5 +61,5 @@ async def uploadMoyennes(period: str):
 async def uploadMoyennes(period: str):
     df_results, reults = Result.get(period)
     df_students, students = Student.get()
-    merged_pdf_path = merge_pdfs(students, df_results, df_students)
-    return StreamingResponse(open(merged_pdf_path, 'rb'), media_type="application/pdf")
+    merged_pdf_content = merge_pdfs(students, df_results, df_students)
+    return StreamingResponse(merged_pdf_content, media_type="application/pdf")

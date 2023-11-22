@@ -18,24 +18,13 @@ def generate_pdf_content(student, resultat):
     y_position = 670
 
     for row in resultat.itertuples():
-        pdf_canvas.drawString(70, y_position, f"Note: {row['note']}")
+        pdf_canvas.drawString(70, y_position, f"Note: {row[6]}")
         y_position -= 20
 
     pdf_canvas.save()
 
     pdf_buffer.seek(0)
-    return pdf_buffer.read()
-
-
-def generate_pdf_for_student(student, resultat):
-    pdf_content = generate_pdf_content(student, resultat)
-
-    # Enregistrez le PDF dans un fichier temporaire
-    pdf_path = f'tmp_student_{student.id}.pdf'
-    with open(pdf_path, 'wb') as pdf_file:
-        pdf_file.write(pdf_content)
-
-    return pdf_path
+    return pdf_buffer
 
 
 def merge_pdfs(students, df_resultats, df_students):
@@ -48,12 +37,17 @@ def merge_pdfs(students, df_resultats, df_students):
         # resultat = pd.merge(df_students[condition], df_resultats, on=['nom', 'prenom'], how='inner')
         resultat = merg_df[merg_df['id'] == student.id]
         if not resultat.empty:
-            pdf_path = generate_pdf_for_student(student, resultat)
-            merger.append(pdf_path)
+            try:
+                pdf_content = generate_pdf_content(student, resultat)
+                merger.append(pdf_content)
+            except Exception as e:
+                print(f"Une erreur s'est produite : {e}")
 
-    # Enregistrez le PDF fusionné dans un fichier temporaire
-    merged_pdf_path = 'merged_students.pdf'
-    merger.write(merged_pdf_path)
+    # Crée un objet BytesIO pour le PDF fusionné
+    merged_pdf_content = BytesIO()
+    merger.write(merged_pdf_content)
     merger.close()
 
-    return merged_pdf_path
+    merged_pdf_content.seek(0)
+
+    return merged_pdf_content
